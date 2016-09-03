@@ -3,9 +3,15 @@ var scene = null;
 var camera = null;
 var light = null;
 var qiu = null;
-
+var mouseX = 0, mouseY = 0;
 function init() {
     initScene();
+
+    loadObj();
+
+    render();
+}
+function createCube() {
     // cube
     var cube = new THREE.Mesh(
         new THREE.CubeGeometry(10, 20, 30),
@@ -16,9 +22,21 @@ function init() {
     );
     scene.add(cube);
     qiu = cube;
+}
 
+function initEvent(){
+    document.addEventListener( 'mousedown', onDocumentMouseMove, false );
 
-    render();
+    //document.addEventListener('mouseclick')
+    document.addEventListener( 'mouseup', onMouseUp, false );
+}
+function onDocumentMouseMove(event){
+    mouseX = ( event.clientX - windowHalfX ) / 2;
+    mouseY = ( event.clientY - windowHalfY ) / 2;
+
+    camera.position.x += ( mouseX - camera.position.x ) * .05;
+    camera.position.y += ( - mouseY - camera.position.y ) * .05;
+
 }
 
 function loadObj() {
@@ -35,6 +53,7 @@ function loadObj() {
 
 
         scene.add(loadObj);
+
     });
 }
 
@@ -46,7 +65,7 @@ function initScene() {
 
     camera = new THREE.PerspectiveCamera(60, 4 / 3, 1, 1000);// 透视投影
     //camera = new THREE.OrthographicCamera(-2, 2, 1.5, -1.5, 1, 10);// 正交投影
-    camera.position.set(3, 3, 50);
+    camera.position.set(3, 3, 5);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
 
@@ -55,10 +74,8 @@ function initScene() {
     scene.add(light);
 }
 function render() {
-    if (qiu) {
-        qiu.rotation.x += 0.01;
-        qiu.rotation.y += 0.01;
-    }
+
+
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
